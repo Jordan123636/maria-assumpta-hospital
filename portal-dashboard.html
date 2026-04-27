@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Dashboard – Patient Portal | Maria Assumpta Hospital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --navy: #0b1f3a; --blue: #163a6e; --gold: #b8922a; --gold-light: #d4ab4f; --cream: #f7f3ec; --cream-dark: #ede8df; --white: #fff; --gray: #6b7280; --text: #14213d; --sidebar: #0d2342; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: 240px; min-height: 100vh; background: var(--sidebar); display: flex; flex-direction: column; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
+    .sidebar-brand { padding: 22px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .brand-row { display: flex; align-items: center; gap: 10px; }
+    .brand-logo { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .brand-logo svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.2; }
+    .brand-name { font-family: 'Cormorant Garamond', serif; color: var(--gold-light); font-size: 0.88rem; font-weight: 600; line-height: 1.3; }
+    .brand-sub { color: rgba(255,255,255,0.35); font-size: 0.7rem; margin-top: 4px; }
+    .sidebar-nav { flex: 1; padding: 14px 0; overflow-y: auto; }
+    .nav-section { padding: 10px 20px 4px; font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: rgba(255,255,255,0.6); font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.18s; border-left: 3px solid transparent; text-decoration: none; }
+    .nav-item svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+    .nav-item:hover { color: white; background: rgba(255,255,255,0.06); }
+    .nav-item.active { color: white; border-left-color: var(--gold); background: rgba(255,255,255,0.08); }
+    .nav-badge { margin-left: auto; background: var(--gold); color: var(--navy); font-size: 0.62rem; font-weight: 700; border-radius: 10px; padding: 1px 7px; }
+    .sidebar-bottom { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+    .user-row { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--navy); flex-shrink: 0; }
+    .user-name { color: white; font-size: 0.83rem; font-weight: 600; }
+    .user-sub { color: rgba(255,255,255,0.4); font-size: 0.7rem; }
+    .logout-btn { margin-top: 12px; width: 100%; padding: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.55); border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .logout-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+
+    /* MAIN */
+    .main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+    .topbar { background: white; border-bottom: 1px solid #e5e0d8; padding: 0 30px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .topbar-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700; color: var(--navy); }
+    .topbar-right { display: flex; align-items: center; gap: 14px; }
+    .content { padding: 26px 30px; flex: 1; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* CARDS */
+    .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: white; border-radius: 10px; padding: 20px; border: 1px solid #e5e0d8; }
+    .stat-icon { font-size: 1.4rem; margin-bottom: 8px; }
+    .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray); font-weight: 600; margin-bottom: 4px; }
+    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; color: var(--navy); line-height: 1; }
+    .stat-sub { font-size: 0.72rem; color: var(--gray); margin-top: 4px; }
+    .grid-2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
+    .card { background: white; border-radius: 10px; padding: 22px; border: 1px solid #e5e0d8; }
+    .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .card-title { font-size: 0.9rem; font-weight: 700; color: var(--navy); }
+    .card-link { font-size: 0.78rem; color: var(--gold); font-weight: 600; cursor: pointer; }
+
+    /* PRESCRIPTIONS */
+    .rx-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e5e0d8; }
+    .rx-icon { width: 38px; height: 38px; background: var(--cream); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .rx-name { font-size: 0.88rem; font-weight: 600; color: var(--navy); }
+    .rx-detail { font-size: 0.74rem; color: var(--gray); margin-top: 2px; }
+    .rx-badge { margin-left: auto; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
+    .badge-ready { background: #d1fae5; color: #065f46; }
+    .badge-collected { background: #e0e7ff; color: #3730a3; }
+    .badge-pending { background: #fef3c7; color: #92400e; }
+
+    /* APPOINTMENTS */
+    .appt-item { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--cream); border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--gold); }
+    .appt-date { background: var(--navy); color: white; border-radius: 8px; padding: 8px 10px; text-align: center; flex-shrink: 0; min-width: 52px; }
+    .appt-day { font-size: 1.3rem; font-weight: 700; line-height: 1; }
+    .appt-month { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold-light); }
+    .appt-title { font-size: 0.88rem; font-weight: 600; color: var(--navy); }
+    .appt-sub { font-size: 0.74rem; color: var(--gray); margin-top: 3px; }
+    .appt-confirmed { font-size: 0.7rem; font-weight: 700; color: #15803d; background: #d1fae5; padding: 3px 10px; border-radius: 10px; margin-left: auto; flex-shrink: 0; }
+
+    /* MESSAGING */
+    .messaging-wrap { display: grid; grid-template-columns: 270px 1fr; height: calc(100vh - 140px); background: white; border-radius: 10px; border: 1px solid #e5e0d8; overflow: hidden; }
+    .thread-list { border-right: 1px solid #e5e0d8; display: flex; flex-direction: column; }
+    .thread-list-head { padding: 16px; border-bottom: 1px solid #e5e0d8; }
+    .thread-list-head h3 { font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+    .thread-search { width: 100%; padding: 8px 12px; border: 1px solid #e0dbd2; border-radius: 6px; font-size: 0.82rem; font-family: 'DM Sans', sans-serif; background: var(--cream); outline: none; }
+    .thread-body { flex: 1; overflow-y: auto; }
+    .thread-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; cursor: pointer; border-bottom: 1px solid #f0ebe2; transition: background 0.15s; }
+    .thread-item:hover, .thread-item.active { background: var(--cream); }
+    .t-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: white; flex-shrink: 0; }
+    .t-info { flex: 1; min-width: 0; }
+    .t-name { font-size: 0.83rem; font-weight: 600; color: var(--navy); }
+    .t-preview { font-size: 0.73rem; color: var(--gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .t-time { font-size: 0.67rem; color: var(--gray); flex-shrink: 0; }
+    .chat-area { display: flex; flex-direction: column; }
+    .chat-head { padding: 14px 18px; border-bottom: 1px solid #e5e0d8; display: flex; align-items: center; gap: 12px; }
+    .chat-head-name { font-size: 0.9rem; font-weight: 700; color: var(--navy); }
+    .chat-head-role { font-size: 0.74rem; color: var(--gray); }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; background: #faf7f3; }
+    .bubble-row { display: flex; flex-direction: column; }
+    .bubble-row.mine { align-items: flex-end; }
+    .bubble { max-width: 72%; padding: 10px 14px; border-radius: 12px; font-size: 0.84rem; line-height: 1.6; }
+    .bubble.theirs { background: white; color: var(--text); border-bottom-left-radius: 3px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .bubble.mine { background: var(--navy); color: white; border-bottom-right-radius: 3px; }
+    .bubble-time { font-size: 0.64rem; color: var(--gray); margin-top: 3px; }
+    .rx-bubble { background: #fef9ec; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 14px; font-size: 0.8rem; max-width: 72%; margin-top: 4px; color: #92400e; }
+    .rx-bubble strong { display: block; margin-bottom: 4px; color: #7c2d12; }
+    .chat-input-row { display: flex; gap: 10px; padding: 12px 18px; border-top: 1px solid #e5e0d8; background: white; }
+    .chat-input { flex: 1; padding: 10px 14px; border: 1.5px solid #d0cbc2; border-radius: 8px; font-size: 0.87rem; font-family: 'DM Sans', sans-serif; outline: none; resize: none; height: 42px; }
+    .chat-input:focus { border-color: var(--gold); }
+    .send-btn { background: var(--navy); color: white; border: none; border-radius: 8px; padding: 10px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .send-btn:hover { background: var(--blue); }
+    .rx-issue-btn { background: var(--gold); color: var(--navy); border: none; border-radius: 8px; padding: 10px 14px; font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; display: none; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: white; border-radius: 12px; padding: 28px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 18px; }
+    .modal .field { margin-bottom: 14px; }
+    .modal .field label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+    .modal .field input, .modal .field select { width: 100%; padding: 10px 12px; border: 1.5px solid #d0cbc2; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; }
+    .modal .field input:focus { border-color: var(--gold); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+    .modal-submit { flex: 1; padding: 11px; background: var(--navy); color: white; border: none; border-radius: 7px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .modal-cancel { padding: 11px 18px; background: transparent; border: 1.5px solid #d0cbc2; border-radius: 7px; font-size: 0.9rem; color: var(--gray); cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+    /* TABLE */
+    .tbl-wrap { background: white; border-radius: 10px; border: 1px solid #e5e0d8; overflow: hidden; }
+    .tbl-wrap table { width: 100%; border-collapse: collapse; }
+    .tbl-wrap th { text-align: left; padding: 12px 16px; font-size: 0.71rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray); border-bottom: 1px solid #e5e0d8; font-weight: 600; }
+    .tbl-wrap td { padding: 13px 16px; font-size: 0.84rem; border-bottom: 1px solid #f0ebe2; color: var(--text); }
+    .tbl-wrap tr:last-child td { border-bottom: none; }
+    .tbl-wrap tr:hover td { background: var(--cream); }
+    .empty-state { padding: 40px; text-align: center; color: var(--gray); font-size: 0.88rem; }
+
+    /* LOADING */
+    .loader { display: flex; align-items: center; justify-content: center; padding: 40px; }
+    .spin { width: 28px; height: 28px; border: 3px solid #e5e0d8; border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+    .panel-head h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; color: var(--navy); }
+    .btn-action { background: var(--navy); color: white; border: none; border-radius: 7px; padding: 10px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+    @media (max-width: 900px) { .sidebar { display: none; } .main { margin-left: 0; } .grid-4 { grid-template-columns: 1fr 1fr; } .grid-2 { grid-template-columns: 1fr; } .messaging-wrap { grid-template-columns: 1fr; } .thread-list { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-row">
+      <div class="brand-logo"><svg viewBox="0 0 24 24"><path d="M12 2v8M8 6h8M12 14v8M4 18h16" stroke-linecap="round"/></svg></div>
+      <span class="brand-name">Maria Assumpta<br>Hospital</span>
+    </div>
+    <div class="brand-sub">Patient Portal</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <a class="nav-item active" onclick="showPanel('dashboard',this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" onclick="showPanel('messages',this)">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Messages <span class="nav-badge" id="msg-badge" style="display:none">0</span>
+    </a>
+    <a class="nav-item" onclick="showPanel('prescriptions',this)">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linecap="round"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke-linecap="round"/></svg>
+      Prescriptions
+    </a>
+    <a class="nav-item" onclick="showPanel('appointments',this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round"/></svg>
+      Appointments
+    </a>
+    <div class="nav-section" style="margin-top:10px">Records</div>
+    <a class="nav-item" onclick="showPanel('records',this)">
+      <svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M9 8h6M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/></svg>
+      Medical Records
+    </a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-row">
+      <div class="user-avatar" id="sidebar-avatar">?</div>
+      <div><div class="user-name" id="sidebar-name">Loading…</div><div class="user-sub" id="sidebar-id">—</div></div>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">← Logout</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <span class="topbar-title" id="topbar-title">Dashboard</span>
+    <div class="topbar-right">
+      <div class="user-avatar" id="topbar-avatar" style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--navy);">?</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="panel-dashboard" class="panel active">
+      <div class="grid-4">
+        <div class="stat-card"><div class="stat-icon">💊</div><div class="stat-label">Active Prescriptions</div><div class="stat-num" id="stat-rx">—</div><div class="stat-sub">From your doctors</div></div>
+        <div class="stat-card"><div class="stat-icon">💬</div><div class="stat-label">Unread Messages</div><div class="stat-num" id="stat-msgs">—</div><div class="stat-sub">Check messages</div></div>
+        <div class="stat-card"><div class="stat-icon">📅</div><div class="stat-label">Upcoming Appointments</div><div class="stat-num" id="stat-appts">—</div><div class="stat-sub">View schedule</div></div>
+        <div class="stat-card"><div class="stat-icon">🔬</div><div class="stat-label">Lab Results</div><div class="stat-num" id="stat-labs">—</div><div class="stat-sub">Medical records</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><span class="card-title">💬 Recent Messages</span><span class="card-link" onclick="showPanel('messages',document.querySelectorAll('.nav-item')[1])">View all</span></div>
+          <div id="dash-messages"><div class="loader"><div class="spin"></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">💊 Active Prescriptions</span><span class="card-link" onclick="showPanel('prescriptions',document.querySelectorAll('.nav-item')[2])">View all</span></div>
+          <div id="dash-rx"><div class="loader"><div class="spin"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div id="panel-messages" class="panel">
+      <div class="messaging-wrap">
+        <div class="thread-list">
+          <div class="thread-list-head">
+            <h3>Conversations</h3>
+            <input class="thread-search" placeholder="Search…" type="text" id="thread-search" oninput="filterThreads()"/>
+          </div>
+          <div class="thread-body" id="thread-list-body"><div class="loader"><div class="spin"></div></div></div>
+        </div>
+        <div class="chat-area">
+          <div class="chat-head" id="chat-head">
+            <div class="t-avatar" id="chat-avatar" style="background:#163a6e">?</div>
+            <div><div class="chat-head-name" id="chat-name">Select a conversation</div><div class="chat-head-role" id="chat-role"></div></div>
+          </div>
+          <div class="chat-messages" id="chat-messages"><div style="padding:40px;text-align:center;color:var(--gray);font-size:0.88rem;">Select a conversation to start messaging</div></div>
+          <div class="chat-input-row">
+            <textarea class="chat-input" id="chat-input" placeholder="Type your message…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+            <button class="rx-issue-btn" id="rx-btn" onclick="openRxModal()">+ Rx</button>
+            <button class="send-btn" onclick="sendMsg()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRESCRIPTIONS -->
+    <div id="panel-prescriptions" class="panel">
+      <div class="panel-head"><h2>Prescriptions</h2></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Drug Name</th><th>Dosage</th><th>Frequency</th><th>Duration</th><th>Prescribed By</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody id="rx-table-body"><tr><td colspan="7"><div class="loader"><div class="spin"></div></div></td></tr></tbody>
+        </table>
+      </div>
+      <div style="margin-top:18px;background:white;border-radius:10px;padding:18px;border:1px solid #e5e0d8;font-size:0.84rem;color:var(--gray);line-height:1.7;">
+        💡 <strong style="color:var(--navy)">About e-Prescriptions:</strong> Prescriptions can be collected from our on-site pharmacy or taken to any licensed pharmacy in Nigeria. Show your Patient ID or prescription reference number when collecting.
+      </div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <div id="panel-appointments" class="panel">
+      <div class="panel-head"><h2>Appointments</h2><button class="btn-action" onclick="openApptModal()">+ Book Appointment</button></div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Upcoming Appointments</div>
+        <div id="upcoming-appts"><div class="loader"><div class="spin"></div></div></div>
+        <div class="card-title" style="margin:22px 0 14px;">Past Appointments</div>
+        <div id="past-appts"><div class="loader"><div class="spin"></div></div></div>
+      </div>
+    </div>
+
+    <!-- RECORDS -->
+    <div id="panel-records" class="panel">
+      <div class="panel-head"><h2>Medical Records</h2></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px">🔬 Lab Results</div>
+          <div id="lab-results"><div class="loader"><div class="spin"></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="margin-bottom:14px">📋 Clinical Notes</div>
+          <div id="clinical-notes"><div class="loader"><div class="spin"></div></div></div>
+          <p style="font-size:0.8rem;color:var(--gray);margin-top:14px;line-height:1.6;">Contact your doctor via Messages if you have questions about any record.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PRESCRIPTION MODAL (doctor only) -->
+<div class="modal-overlay" id="rx-modal">
+  <div class="modal">
+    <h3>Issue Prescription</h3>
+    <div class="field"><label>Drug Name</label><input type="text" id="rx-drug" placeholder="e.g. Amoxicillin"/></div>
+    <div class="field"><label>Dosage</label><input type="text" id="rx-dosage" placeholder="e.g. 500mg"/></div>
+    <div class="field"><label>Frequency</label><input type="text" id="rx-freq" placeholder="e.g. 3x daily"/></div>
+    <div class="field"><label>Duration</label><input type="text" id="rx-duration" placeholder="e.g. 7 days"/></div>
+    <div class="field"><label>Instructions</label><input type="text" id="rx-notes" placeholder="e.g. Take after meals"/></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeRxModal()">Cancel</button>
+      <button class="modal-submit" onclick="submitRx()">Issue Prescription</button>
+    </div>
+  </div>
+</div>
+
+<!-- APPOINTMENT MODAL -->
+<div class="modal-overlay" id="appt-modal">
+  <div class="modal">
+    <h3>Book Appointment</h3>
+    <div class="field"><label>Department / Service</label>
+      <select id="appt-dept">
+        <option value="">Select department</option>
+        <option>Cardiology</option><option>Gastroenterology</option><option>Dermatology</option>
+        <option>Hematology</option><option>Psychiatry / Behavioral Medicine</option><option>Family Medicine</option>
+        <option>Ophthalmology</option><option>General Surgery</option><option>Urology</option>
+        <option>Antenatal Care (ANC)</option><option>Obstetrics &amp; Gynecology</option>
+        <option>Accidents &amp; Emergency</option><option>General Consultation</option>
+      </select>
+    </div>
+    <div class="field"><label>Preferred Date</label><input type="date" id="appt-date"/></div>
+    <div class="field"><label>Preferred Time</label>
+      <select id="appt-time">
+        <option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option>
+        <option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option>
+        <option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option>
+      </select>
+    </div>
+    <div class="field"><label>Notes (optional)</label><input type="text" id="appt-notes" placeholder="Briefly describe your concern"/></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeApptModal()">Cancel</button>
+      <button class="modal-submit" onclick="submitAppt()">Request Appointment</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, collection, doc, getDoc, getDocs, addDoc, query, where, orderBy, onSnapshot, updateDoc, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsbb8V5Om9729ynpJ6J0xoO2xISYK2oPU",
+    authDomain: "maria-assumpta-hospital.firebaseapp.com",
+    projectId: "maria-assumpta-hospital",
+    storageBucket: "maria-assumpta-hospital.firebasestorage.app",
+    messagingSenderId: "365787890882",
+    appId: "1:365787890882:web:13ec48f9a7625d4675275b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUser = null;
+  let currentUserData = null;
+  let currentThreadId = null;
+  let currentThreadOther = null;
+  let unsubMessages = null;
+  let allThreads = [];
+
+  // ── AUTH GUARD ──
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'portal-login.html'; return; }
+    currentUser = user;
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (!snap.exists() || snap.data().status !== 'active') {
+      alert('Your account is not active. Please contact the hospital.');
+      await signOut(auth); window.location.href = 'portal-login.html'; return;
+    }
+    currentUserData = snap.data();
+    initUI();
+  });
+
+  function initUI() {
+    const initials = (currentUserData.firstName[0] + currentUserData.lastName[0]).toUpperCase();
+    const name = currentUserData.firstName + ' ' + currentUserData.lastName;
+    document.getElementById('sidebar-avatar').textContent = initials;
+    document.getElementById('topbar-avatar').textContent = initials;
+    document.getElementById('sidebar-name').textContent = name;
+    document.getElementById('sidebar-id').textContent = currentUserData.patientId || currentUserData.role;
+
+    // Show Rx button only for doctors
+    if (currentUserData.role === 'doctor') document.getElementById('rx-btn').style.display = 'block';
+
+    loadDashboard();
+    loadThreads();
+    loadPrescriptions();
+    loadAppointments();
+    loadRecords();
+  }
+
+  // ── DASHBOARD ──
+  async function loadDashboard() {
+    const rxQ = query(collection(db,'prescriptions'), where('patientId','==', currentUser.uid));
+    const rxSnap = await getDocs(rxQ);
+    document.getElementById('stat-rx').textContent = rxSnap.size;
+    let rxHtml = '';
+    rxSnap.forEach(d => {
+      const r = d.data();
+      const bClass = r.status==='ready'?'badge-ready':r.status==='collected'?'badge-collected':'badge-pending';
+      rxHtml += `<div class="rx-item"><div class="rx-icon">💊</div><div><div class="rx-name">${r.drug} ${r.dosage}</div><div class="rx-detail">${r.frequency} · ${r.duration} · ${r.doctorName||'Doctor'}</div></div><span class="rx-badge ${bClass}">${capitalize(r.status)}</span></div>`;
+    });
+    document.getElementById('dash-rx').innerHTML = rxHtml || '<div class="empty-state">No prescriptions yet</div>';
+
+    const apptQ = query(collection(db,'appointments'), where('patientId','==',currentUser.uid), where('status','==','confirmed'));
+    const apptSnap = await getDocs(apptQ);
+    document.getElementById('stat-appts').textContent = apptSnap.size;
+
+    document.getElementById('stat-msgs').textContent = '—';
+    document.getElementById('stat-labs').textContent = '—';
+
+    loadRecentMessages();
+  }
+
+  async function loadRecentMessages() {
+    const q = query(collection(db,'messages'), where('participants','array-contains', currentUser.uid), orderBy('createdAt','desc'));
+    const snap = await getDocs(q);
+    const seen = new Set(); const msgs = [];
+    snap.forEach(d => { const data = d.data(); const tid = data.threadId; if (!seen.has(tid)) { seen.add(tid); msgs.push(data); } });
+    document.getElementById('stat-msgs').textContent = msgs.length;
+    let html = '';
+    for (const m of msgs.slice(0,3)) {
+      const otherId = m.participants.find(p => p !== currentUser.uid);
+      const otherSnap = await getDoc(doc(db,'users',otherId));
+      const other = otherSnap.exists() ? otherSnap.data() : {firstName:'Unknown',lastName:''};
+      const initials = (other.firstName[0]+(other.lastName[0]||'')).toUpperCase();
+      const bg = other.role==='doctor'?'#163a6e':other.role==='pharmacy'?'#b8922a':'#065f46';
+      html += `<div class="rx-item" style="cursor:pointer" onclick="showPanel('messages',document.querySelectorAll('.nav-item')[1])">
+        <div class="rx-icon" style="background:${bg};color:white;font-size:0.7rem;font-weight:700;border-radius:50%;width:36px;height:36px">${initials}</div>
+        <div><div class="rx-name">${other.firstName} ${other.lastName}</div><div class="rx-detail">${m.text?.slice(0,50)||'…'}</div></div>
+      </div>`;
+    }
+    document.getElementById('dash-messages').innerHTML = html || '<div class="empty-state">No messages yet</div>';
+  }
+
+  // ── THREADS ──
+  async function loadThreads() {
+    const q = query(collection(db,'threads'), where('participants','array-contains', currentUser.uid), orderBy('updatedAt','desc'));
+    onSnapshot(q, async (snap) => {
+      allThreads = [];
+      for (const d of snap.docs) {
+        const t = { id: d.id, ...d.data() };
+        const otherId = t.participants.find(p => p !== currentUser.uid);
+        const otherSnap = await getDoc(doc(db,'users', otherId));
+        t.other = otherSnap.exists() ? otherSnap.data() : { firstName:'Unknown', lastName:'', role:'user' };
+        t.otherId = otherId;
+        allThreads.push(t);
+      }
+      renderThreadList(allThreads);
+    });
+  }
+
+  function renderThreadList(threads) {
+    const body = document.getElementById('thread-list-body');
+    if (!threads.length) { body.innerHTML = '<div class="empty-state">No conversations yet</div>'; return; }
+    body.innerHTML = threads.map(t => {
+      const o = t.other;
+      const initials = (o.firstName[0]+(o.lastName[0]||'')).toUpperCase();
+      const bg = o.role==='doctor'?'#163a6e':o.role==='pharmacy'?'#b8922a':'#065f46';
+      const preview = t.lastMessage?.slice(0,40)||'';
+      const timeStr = t.updatedAt ? formatTime(t.updatedAt.toDate()) : '';
+      return `<div class="thread-item ${currentThreadId===t.id?'active':''}" onclick="openThread('${t.id}','${t.otherId}')">
+        <div class="t-avatar" style="background:${bg}">${initials}</div>
+        <div class="t-info"><div class="t-name">${o.firstName} ${o.lastName} <small style="color:var(--gray);font-weight:400">(${capitalize(o.role)})</small></div><div class="t-preview">${preview}</div></div>
+        <div class="t-time">${timeStr}</div>
+      </div>`;
+    }).join('');
+  }
+
+  window.filterThreads = () => {
+    const q = document.getElementById('thread-search').value.toLowerCase();
+    renderThreadList(allThreads.filter(t => (t.other.firstName+' '+t.other.lastName).toLowerCase().includes(q)));
+  };
+
+  window.openThread = async (threadId, otherId) => {
+    currentThreadId = threadId;
+    currentThreadOther = otherId;
+    const otherSnap = await getDoc(doc(db,'users',otherId));
+    const other = otherSnap.exists() ? otherSnap.data() : {firstName:'Unknown',lastName:'',role:'user'};
+    const initials = (other.firstName[0]+(other.lastName[0]||'')).toUpperCase();
+    const bg = other.role==='doctor'?'#163a6e':other.role==='pharmacy'?'#b8922a':'#065f46';
+    document.getElementById('chat-avatar').style.background = bg;
+    document.getElementById('chat-avatar').textContent = initials;
+    document.getElementById('chat-name').textContent = other.firstName + ' ' + other.lastName;
+    document.getElementById('chat-role').textContent = capitalize(other.role);
+    renderThreadList(allThreads);
+    listenToMessages(threadId);
+  };
+
+  function listenToMessages(threadId) {
+    if (unsubMessages) unsubMessages();
+    const q = query(collection(db,'messages'), where('threadId','==',threadId), orderBy('createdAt','asc'));
+    unsubMessages = onSnapshot(q, snap => {
+      const box = document.getElementById('chat-messages');
+      box.innerHTML = '';
+      snap.forEach(d => {
+        const m = d.data();
+        const isMine = m.senderId === currentUser.uid;
+        const wrap = document.createElement('div');
+        wrap.className = 'bubble-row' + (isMine?' mine':'');
+        const timeStr = m.createdAt ? formatTime(m.createdAt.toDate()) : '';
+        if (m.type === 'prescription') {
+          wrap.innerHTML = `<div class="rx-bubble"><strong>📋 e-Prescription Issued</strong>${m.drug} ${m.dosage} · ${m.frequency} · ${m.duration}<br><small>${m.notes||''}</small><br><small>By ${m.senderName}</small></div><div class="bubble-time">${timeStr}</div>`;
+        } else {
+          wrap.innerHTML = `<div class="bubble ${isMine?'mine':'theirs'}">${escHtml(m.text)}</div><div class="bubble-time">${timeStr}</div>`;
+        }
+        box.appendChild(wrap);
+      });
+      box.scrollTop = box.scrollHeight;
+    });
+  }
+
+  window.sendMsg = async () => {
+    if (!currentThreadId) return;
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    await addDoc(collection(db,'messages'), {
+      threadId: currentThreadId, text,
+      senderId: currentUser.uid,
+      senderName: currentUserData.firstName + ' ' + currentUserData.lastName,
+      participants: [currentUser.uid, currentThreadOther],
+      type: 'message', createdAt: serverTimestamp()
+    });
+    await updateDoc(doc(db,'threads',currentThreadId), { lastMessage: text, updatedAt: serverTimestamp() });
+  };
+
+  // ── PRESCRIPTIONS ──
+  async function loadPrescriptions() {
+    const uid = currentUser.uid;
+    const q = currentUserData.role === 'patient'
+      ? query(collection(db,'prescriptions'), where('patientId','==',uid), orderBy('createdAt','desc'))
+      : query(collection(db,'prescriptions'), where('doctorId','==',uid), orderBy('createdAt','desc'));
+    const snap = await getDocs(q);
+    const tbody = document.getElementById('rx-table-body');
+    if (snap.empty) { tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No prescriptions found</div></td></tr>'; return; }
+    let html = '';
+    snap.forEach(d => {
+      const r = d.data();
+      const bClass = r.status==='ready'?'badge-ready':r.status==='collected'?'badge-collected':'badge-pending';
+      const dateStr = r.createdAt ? r.createdAt.toDate().toLocaleDateString('en-GB') : '—';
+      html += `<tr><td><strong>${r.drug}</strong></td><td>${r.dosage}</td><td>${r.frequency}</td><td>${r.duration}</td><td>${r.doctorName||'—'}</td><td>${dateStr}</td><td><span class="rx-badge ${bClass}">${capitalize(r.status)}</span></td></tr>`;
+    });
+    tbody.innerHTML = html;
+  }
+
+  // ── APPOINTMENTS ──
+  async function loadAppointments() {
+    const now = new Date();
+    const q = query(collection(db,'appointments'), where('patientId','==',currentUser.uid), orderBy('date','desc'));
+    const snap = await getDocs(q);
+    let upcoming = '', past = '';
+    snap.forEach(d => {
+      const a = d.data();
+      const aDate = a.date?.toDate ? a.date.toDate() : new Date(a.date);
+      const day = aDate.getDate();
+      const month = aDate.toLocaleString('en',{month:'short'}).toUpperCase();
+      const html = `<div class="appt-item" style="${aDate<now?'opacity:0.7':''}">
+        <div class="appt-date"><div class="appt-day">${day}</div><div class="appt-month">${month}</div></div>
+        <div><div class="appt-title">${a.department}</div><div class="appt-sub">${a.time}${a.notes?' · '+a.notes:''}</div></div>
+        <span class="appt-confirmed">${capitalize(a.status||'Pending')}</span>
+      </div>`;
+      if (aDate >= now) upcoming += html;
+      else past += html;
+    });
+    document.getElementById('upcoming-appts').innerHTML = upcoming || '<div class="empty-state">No upcoming appointments</div>';
+    document.getElementById('past-appts').innerHTML = past || '<div class="empty-state">No past appointments</div>';
+  }
+
+  // ── RECORDS ──
+  async function loadRecords() {
+    const q = query(collection(db,'records'), where('patientId','==',currentUser.uid), orderBy('createdAt','desc'));
+    const snap = await getDocs(q);
+    let labs = '', notes = '';
+    snap.forEach(d => {
+      const r = d.data();
+      const dateStr = r.createdAt ? r.createdAt.toDate().toLocaleDateString('en-GB') : '—';
+      const html = `<div class="rx-item"><div class="rx-icon">${r.type==='lab'?'🧪':'📄'}</div><div><div class="rx-name">${r.title}</div><div class="rx-detail">${dateStr} · ${r.doctor||'—'}</div></div></div>`;
+      if (r.type === 'lab') labs += html;
+      else notes += html;
+    });
+    document.getElementById('lab-results').innerHTML = labs || '<div class="empty-state">No lab results yet</div>';
+    document.getElementById('clinical-notes').innerHTML = notes || '<div class="empty-state">No clinical notes yet</div>';
+    document.getElementById('stat-labs').textContent = snap.size;
+  }
+
+  // ── RX MODAL ──
+  window.openRxModal = () => { document.getElementById('rx-modal').classList.add('open'); };
+  window.closeRxModal = () => { document.getElementById('rx-modal').classList.remove('open'); };
+  window.submitRx = async () => {
+    if (!currentThreadId || !currentThreadOther) { alert('Select a patient conversation first.'); return; }
+    const drug = document.getElementById('rx-drug').value.trim();
+    const dosage = document.getElementById('rx-dosage').value.trim();
+    const freq = document.getElementById('rx-freq').value.trim();
+    const dur = document.getElementById('rx-duration').value.trim();
+    const notes = document.getElementById('rx-notes').value.trim();
+    if (!drug||!dosage||!freq||!dur) { alert('Please fill all required fields.'); return; }
+    const rxData = {
+      threadId: currentThreadId,
+      senderId: currentUser.uid,
+      senderName: currentUserData.firstName+' '+currentUserData.lastName,
+      participants: [currentUser.uid, currentThreadOther],
+      type: 'prescription',
+      drug, dosage, frequency: freq, duration: dur, notes,
+      patientId: currentThreadOther,
+      doctorId: currentUser.uid,
+      doctorName: currentUserData.firstName+' '+currentUserData.lastName,
+      status: 'pending',
+      createdAt: serverTimestamp()
+    };
+    await addDoc(collection(db,'messages'), rxData);
+    await addDoc(collection(db,'prescriptions'), rxData);
+    await updateDoc(doc(db,'threads',currentThreadId), { lastMessage: `📋 Prescription: ${drug} ${dosage}`, updatedAt: serverTimestamp() });
+    closeRxModal();
+    ['rx-drug','rx-dosage','rx-freq','rx-duration','rx-notes'].forEach(id => document.getElementById(id).value='');
+  };
+
+  // ── APPT MODAL ──
+  window.openApptModal = () => { document.getElementById('appt-modal').classList.add('open'); };
+  window.closeApptModal = () => { document.getElementById('appt-modal').classList.remove('open'); };
+  window.submitAppt = async () => {
+    const dept = document.getElementById('appt-dept').value;
+    const date = document.getElementById('appt-date').value;
+    const time = document.getElementById('appt-time').value;
+    const notes = document.getElementById('appt-notes').value.trim();
+    if (!dept||!date) { alert('Please select a department and date.'); return; }
+    await addDoc(collection(db,'appointments'), {
+      patientId: currentUser.uid,
+      patientName: currentUserData.firstName+' '+currentUserData.lastName,
+      department: dept, date: Timestamp.fromDate(new Date(date)),
+      time, notes, status: 'pending', createdAt: serverTimestamp()
+    });
+    closeApptModal();
+    loadAppointments();
+    alert('Appointment request submitted! The hospital will confirm your booking.');
+  };
+
+  // ── LOGOUT ──
+  window.doLogout = async () => { await signOut(auth); window.location.href = 'portal-login.html'; };
+
+  // ── HELPERS ──
+  window.showPanel = (name, el) => {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-'+name).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const titles = {dashboard:'Dashboard',messages:'Messages',prescriptions:'Prescriptions',appointments:'Appointments',records:'Medical Records'};
+    document.getElementById('topbar-title').textContent = titles[name]||name;
+  };
+
+  function capitalize(s) { return s ? s.charAt(0).toUpperCase()+s.slice(1) : ''; }
+  function escHtml(s) { return s?.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')||''; }
+  function formatTime(d) {
+    const now = new Date(); const diff = now - d;
+    if (diff < 60000) return 'just now';
+    if (diff < 3600000) return Math.floor(diff/60000)+'m ago';
+    if (diff < 86400000) return d.toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'});
+    return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+  }
+</script>
+</body>
+</html>

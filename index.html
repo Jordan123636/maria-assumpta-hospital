@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maria Assumpta Catholic Hospital – Ado-Ekiti</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0b1f3a;
+      --blue: #163a6e;
+      --blue-mid: #1e4f99;
+      --gold: #b8922a;
+      --gold-light: #d4ab4f;
+      --cream: #f7f3ec;
+      --cream-dark: #ede8df;
+      --white: #ffffff;
+      --gray: #6b7280;
+      --text: #14213d;
+      --red: #b91c1c;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw; height: 70px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .nav-logo {
+      width: 42px; height: 42px; background: var(--gold);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .nav-logo svg { width: 24px; height: 24px; fill: white; }
+    .nav-name {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--gold-light); font-size: 1rem; font-weight: 600; line-height: 1.25;
+      max-width: 260px;
+    }
+    .nav-links { display: flex; gap: 6px; list-style: none; align-items: center; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 0.82rem; font-weight: 500; padding: 6px 12px;
+      border-radius: 4px; transition: all 0.2s; letter-spacing: 0.02em;
+    }
+    .nav-links a:hover { color: white; background: rgba(255,255,255,0.08); }
+    .nav-links .btn-portal {
+      background: var(--gold); color: var(--navy); font-weight: 600;
+      padding: 8px 16px; border-radius: 5px;
+    }
+    .nav-links .btn-portal:hover { background: var(--gold-light); color: var(--navy); }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh; padding-top: 70px;
+      background:
+        linear-gradient(160deg, rgba(11,31,58,0.93) 0%, rgba(22,58,110,0.75) 50%, rgba(11,31,58,0.9) 100%),
+        url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      padding-left: 8vw; padding-right: 8vw; padding-bottom: 60px;
+      position: relative;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--gold); border-radius: 20px;
+      padding: 5px 14px; margin-bottom: 28px;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-badge span { color: var(--gold-light); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+    .hero-badge .dot { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 4.2rem); font-weight: 700;
+      color: white; line-height: 1.1; max-width: 700px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+    .hero h1 em { color: var(--gold-light); font-style: italic; }
+    .hero p {
+      margin-top: 20px; color: rgba(255,255,255,0.8);
+      font-size: 1rem; font-weight: 300; max-width: 520px; line-height: 1.7;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+    .hero-actions { display: flex; gap: 14px; margin-top: 36px; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease both; }
+    .btn-primary {
+      background: var(--gold); color: var(--navy); font-weight: 600;
+      padding: 13px 28px; border-radius: 6px; text-decoration: none;
+      font-size: 0.92rem; transition: all 0.2s; border: 2px solid var(--gold);
+    }
+    .btn-primary:hover { background: var(--gold-light); border-color: var(--gold-light); }
+    .btn-outline {
+      background: transparent; color: white; font-weight: 500;
+      padding: 13px 28px; border-radius: 6px; text-decoration: none;
+      font-size: 0.92rem; border: 2px solid rgba(255,255,255,0.4);
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+
+    .hero-stats {
+      display: flex; gap: 40px; margin-top: 60px;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+    .stat { border-left: 2px solid var(--gold); padding-left: 16px; }
+    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; color: var(--gold-light); }
+    .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+    /* EMERGENCY BANNER */
+    .emergency-bar {
+      background: var(--red); color: white;
+      text-align: center; padding: 10px 5vw;
+      font-size: 0.88rem; font-weight: 500; letter-spacing: 0.02em;
+    }
+    .emergency-bar a { color: white; font-weight: 700; }
+
+    /* SECTION BASE */
+    section { padding: 90px 8vw; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 700;
+      color: var(--navy); line-height: 1.2;
+    }
+    .section-title em { color: var(--gold); font-style: italic; }
+    .section-sub { color: var(--gray); font-size: 0.95rem; line-height: 1.7; max-width: 580px; margin-top: 12px; }
+    .divider { width: 50px; height: 3px; background: var(--gold); margin: 18px 0 40px; border-radius: 2px; }
+
+    /* ABOUT */
+    #about { background: var(--white); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .about-img {
+      border-radius: 10px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(11,31,58,0.15);
+      position: relative;
+    }
+    .about-img img { width: 100%; height: 420px; object-fit: cover; display: block; }
+    .about-img-badge {
+      position: absolute; bottom: 20px; left: 20px;
+      background: var(--navy); color: white;
+      padding: 10px 18px; border-radius: 6px;
+      font-size: 0.82rem; font-weight: 500;
+      border-left: 3px solid var(--gold);
+    }
+    .about-details { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+    .detail-card {
+      background: var(--cream); border-radius: 8px; padding: 16px;
+      border-left: 3px solid var(--gold);
+    }
+    .detail-card h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray); margin-bottom: 5px; }
+    .detail-card p { font-size: 0.88rem; font-weight: 600; color: var(--navy); }
+
+    /* SERVICES */
+    #services { background: var(--cream); }
+    .services-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px; }
+    .tab-btn {
+      padding: 8px 20px; border-radius: 20px; border: 1.5px solid var(--blue-mid);
+      background: transparent; color: var(--blue-mid); font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    }
+    .tab-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+    .service-card {
+      background: white; border-radius: 10px; padding: 24px;
+      border: 1px solid #e5e0d8;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      transition: all 0.25s; position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--gold); transform: scaleX(0);
+      transform-origin: left; transition: transform 0.3s;
+    }
+    .service-card:hover { box-shadow: 0 8px 30px rgba(11,31,58,0.12); transform: translateY(-3px); }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-icon {
+      width: 44px; height: 44px; background: var(--cream);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .service-icon svg { width: 22px; height: 22px; stroke: var(--blue-mid); fill: none; stroke-width: 1.8; }
+    .service-card h3 { font-size: 1rem; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    .service-card p { font-size: 0.82rem; color: var(--gray); line-height: 1.6; }
+
+    /* PATIENT PORTAL SECTION */
+    #portal-info {
+      background: var(--navy);
+      position: relative; overflow: hidden;
+    }
+    #portal-info::before {
+      content: ''; position: absolute; top: -100px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(184,146,42,0.12) 0%, transparent 70%);
+    }
+    .portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; position: relative; z-index: 1; }
+    .portal-grid .section-title { color: white; }
+    .portal-grid .section-sub { color: rgba(255,255,255,0.65); }
+    .portal-grid .divider { background: var(--gold); }
+    .portal-features { display: flex; flex-direction: column; gap: 18px; margin-top: 30px; }
+    .portal-feature {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: rgba(255,255,255,0.05); border-radius: 8px; padding: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .portal-feature-icon {
+      width: 38px; height: 38px; flex-shrink: 0;
+      background: rgba(184,146,42,0.2); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .portal-feature-icon svg { width: 20px; height: 20px; stroke: var(--gold-light); fill: none; stroke-width: 1.8; }
+    .portal-feature h4 { color: white; font-size: 0.92rem; font-weight: 600; margin-bottom: 3px; }
+    .portal-feature p { color: rgba(255,255,255,0.55); font-size: 0.8rem; line-height: 1.6; }
+    .portal-mockup {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 24px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+    }
+    .mockup-bar { display: flex; gap: 6px; margin-bottom: 18px; }
+    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mock-screen { background: rgba(255,255,255,0.06); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .mock-title { color: var(--gold-light); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+    .mock-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .mock-row:last-child { border-bottom: none; }
+    .mock-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: var(--navy); font-weight: 700; flex-shrink: 0; }
+    .mock-info { flex: 1; }
+    .mock-name { color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 500; }
+    .mock-sub { color: rgba(255,255,255,0.4); font-size: 0.68rem; }
+    .mock-badge { background: rgba(184,146,42,0.25); color: var(--gold-light); font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+    .mock-badge.blue { background: rgba(30,79,153,0.4); color: #8ab4f8; }
+    .mock-badge.green { background: rgba(22,163,74,0.25); color: #6ee7a0; }
+
+    /* PORTAL ACTIONS */
+    .portal-cta-row { display: flex; gap: 14px; margin-top: 28px; }
+
+    /* HOURS & INFO */
+    #info { background: var(--cream-dark); }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .info-card {
+      background: white; border-radius: 10px; padding: 28px;
+      border: 1px solid #e0dbd2;
+    }
+    .info-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; color: var(--navy); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .info-card h3 span { font-size: 1.4rem; }
+    .hours-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--cream-dark); font-size: 0.87rem; }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-day { color: var(--gray); }
+    .hours-time { font-weight: 600; color: var(--navy); }
+    .open-badge { background: #d1fae5; color: #065f46; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; }
+    .contact-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--cream-dark); }
+    .contact-item:last-child { border-bottom: none; }
+    .contact-icon { color: var(--gold); font-size: 1rem; margin-top: 2px; flex-shrink: 0; }
+    .contact-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray); }
+    .contact-value { font-size: 0.88rem; font-weight: 500; color: var(--navy); }
+
+    /* ACCREDITATION */
+    #accreditation { background: var(--white); text-align: center; }
+    .accred-box {
+      background: var(--cream); border-radius: 12px; padding: 40px;
+      border: 1px solid #ddd8cd; max-width: 800px; margin: 0 auto;
+    }
+    .accred-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--navy); margin-bottom: 10px; }
+    .accred-box p { color: var(--gray); font-size: 0.9rem; line-height: 1.7; }
+    .accred-tags { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+    .accred-tag {
+      background: var(--navy); color: var(--gold-light);
+      padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,0.6);
+      padding: 50px 8vw 30px;
+    }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px; margin-bottom: 40px; }
+    .footer-brand .nav-name { color: var(--gold-light); font-size: 1.1rem; margin-bottom: 12px; display: block; }
+    .footer-brand p { font-size: 0.83rem; line-height: 1.7; }
+    footer h4 { color: white; font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.06em; }
+    footer ul { list-style: none; }
+    footer ul li { margin-bottom: 8px; }
+    footer ul a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.83rem; transition: color 0.2s; }
+    footer ul a:hover { color: var(--gold-light); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 22px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.78rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .about-grid, .portal-grid, .footer-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 24px; }
+      .nav-links { display: none; }
+      section { padding: 60px 6vw; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24"><path d="M12 2v8M8 6h8M12 14v8M4 18h16" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>
+    </div>
+    <span class="nav-name">Maria Assumpta Catholic Hospital<br>Ado-Ekiti</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#info">Contact</a></li>
+    <li><a href="portal-login.html" class="btn-portal">Patient Portal →</a></li>
+  </ul>
+</nav>
+
+<!-- EMERGENCY BANNER -->
+<div class="emergency-bar">
+  🚨 Emergency &amp; Ambulance — 24 Hours: <a href="tel:08106763958">0810-676-3958</a> &nbsp;|&nbsp; <a href="tel:08036491356">0803-649-1356</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badge">
+    <div class="dot"></div>
+    <span>Open 24 Hours · 7 Days a Week</span>
+  </div>
+  <h1>Compassionate Care,<br><em>Rooted in Faith</em></h1>
+  <p>A licensed Secondary Health Care Centre serving Ado-Ekiti and Ekiti State with comprehensive medical, surgical, and specialty services — guided by Catholic values of dignity and healing.</p>
+  <div class="hero-actions">
+    <a href="portal-login.html" class="btn-primary">Access Patient Portal</a>
+    <a href="#services" class="btn-outline">View Our Services</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">24</div><div class="stat-label">Licensed Beds</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">A&amp;E Available</div></div>
+    <div class="stat"><div class="stat-num">20+</div><div class="stat-label">Services Offered</div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-img">
+      <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&w=800&q=80" alt="Hospital facility"/>
+      <div class="about-img-badge">📍 Ureje, Ikere Rd. Ado-Ekiti</div>
+    </div>
+    <div>
+      <p class="section-label">About Us</p>
+      <h2 class="section-title">A Heritage of <em>Healing</em></h2>
+      <div class="divider"></div>
+      <p style="color: var(--gray); font-size:0.95rem; line-height:1.8; margin-bottom:16px;">
+        The Maria Assumpta Catholic Hospital is a faith-based healthcare institution located in Ado-Ekiti, Ekiti State, Nigeria. We operate as a registered Secondary Health Care Centre, licensed by the Nigerian Ministry of Health, serving patients who require care beyond what primary health centres can provide.
+      </p>
+      <p style="color: var(--gray); font-size:0.95rem; line-height:1.8;">
+        We offer a wide range of medical, surgical, and clinical specialties supported by an on-site laboratory, pharmacy, and imaging centre — all operating around the clock, every day of the year.
+      </p>
+      <div class="about-details">
+        <div class="detail-card"><h4>Registration</h4><p>Secondary Health Care Centre</p></div>
+        <div class="detail-card"><h4>Licensed By</h4><p>Nigerian Ministry of Health</p></div>
+        <div class="detail-card"><h4>Bed Capacity</h4><p>24 Beds</p></div>
+        <div class="detail-card"><h4>Operating Hours</h4><p>24 Hours, 7 Days</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <p class="section-label">What We Offer</p>
+  <h2 class="section-title">Our <em>Services</em></h2>
+  <div class="divider"></div>
+  <div class="services-tabs">
+    <button class="tab-btn active" onclick="showTab('medical', this)">Medical Services</button>
+    <button class="tab-btn" onclick="showTab('surgical', this)">Surgical Services</button>
+    <button class="tab-btn" onclick="showTab('clinical', this)">Clinical Services</button>
+    <button class="tab-btn" onclick="showTab('support', this)">Support Services</button>
+  </div>
+
+  <div id="tab-medical" class="services-grid">
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-9 4 18 3-9h4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Cardiology</h3><p>Diagnosis and management of heart and cardiovascular conditions.</p></div>
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="6" ry="9" stroke-linecap="round"/><path d="M6 12h12" stroke-linecap="round"/></svg></div><h3>Gastroenterology</h3><p>Specialist care for digestive system disorders and gastrointestinal diseases.</p></div>
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" stroke-linecap="round"/><path d="M8 12s2 3 4 3 4-3 4-3" stroke-linecap="round"/></svg></div><h3>Dermatology</h3><p>Treatment of skin conditions, rashes, infections and chronic skin diseases.</p></div>
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4" stroke-linecap="round"/></svg></div><h3>Hematology</h3><p>Diagnosis and treatment of blood disorders and related conditions.</p></div>
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M9 12h6M12 9v6" stroke-linecap="round"/><circle cx="12" cy="12" r="9"/></svg></div><h3>Psychiatry / Behavioral Medicine</h3><p>Mental health evaluation, counselling and psychiatric care.</p></div>
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/></svg></div><h3>Family Medicine</h3><p>Comprehensive general healthcare for individuals and families of all ages.</p></div>
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M8 14s-4 2-4 6h16c0-4-4-6-4-6" stroke-linecap="round"/></svg></div><h3>Obstetrics &amp; Gynecology</h3><p>Maternal health, pregnancy care, delivery and women's health services.</p></div>
+  </div>
+
+  <div id="tab-surgical" class="services-grid" style="display:none">
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12h4M18 12h4M12 2v4M12 18v4" stroke-linecap="round"/></svg></div><h3>Ophthalmology</h3><p>Eye surgery, vision correction and treatment of ocular conditions.</p></div>
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7" stroke-linecap="round"/></svg></div><h3>General Surgery</h3><p>A broad range of elective and emergency surgical procedures.</p></div>
+    <div class="service-card"><div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4l3 3" stroke-linecap="round"/></svg></div><h3>Urology</h3><p>Treatment of urinary tract diseases and male reproductive health.</p></div>
+  </div>
+
+  <div id="tab-clinical" class="services-grid" style="display:none">
+    <div class="service-card"><h3>Antenatal Care (ANC)</h3><p>Prenatal check-ups and monitoring for expectant mothers.</p></div>
+    <div class="service-card"><h3>Immunization</h3><p>Routine and supplementary vaccine programmes for children and adults.</p></div>
+    <div class="service-card"><h3>HIV/AIDS Services</h3><p>Testing, counselling, treatment and support for HIV/AIDS patients.</p></div>
+    <div class="service-card"><h3>Non-Communicable Diseases</h3><p>Management of diabetes, hypertension, cancer and similar conditions.</p></div>
+    <div class="service-card"><h3>Family Planning</h3><p>Counselling and contraceptive services for reproductive health.</p></div>
+    <div class="service-card"><h3>Accidents &amp; Emergency</h3><p>24-hour emergency response and trauma care.</p></div>
+    <div class="service-card"><h3>Health Education &amp; Community Mobilization</h3><p>Public health outreach, education and community wellness programmes.</p></div>
+  </div>
+
+  <div id="tab-support" class="services-grid" style="display:none">
+    <div class="service-card"><h3>🚑 Ambulance Services</h3><p>Emergency medical transport available around the clock.</p></div>
+    <div class="service-card"><h3>🔬 On-site Laboratory</h3><p>Full diagnostic laboratory services for accurate and timely results.</p></div>
+    <div class="service-card"><h3>🏥 On-site Pharmacy</h3><p>In-house pharmacy stocking prescribed and essential medicines.</p></div>
+    <div class="service-card"><h3>📷 On-site Imaging</h3><p>X-ray and imaging services available on-site for quick diagnostics.</p></div>
+    <div class="service-card"><h3>⚰️ Mortuary Services</h3><p>Dignified mortuary and post-mortem services.</p></div>
+  </div>
+</section>
+
+<!-- PATIENT PORTAL INFO -->
+<section id="portal-info">
+  <div class="portal-grid">
+    <div>
+      <p class="section-label" style="color:var(--gold-light)">Digital Health</p>
+      <h2 class="section-title">The Patient <em>Portal</em></h2>
+      <div class="divider"></div>
+      <p class="section-sub">Our secure online portal connects you directly with your doctor, allows you to view your medical records, and enables your prescriptions to be sent directly to you — even at a pharmacy outside our facility.</p>
+      <div class="portal-features">
+        <div class="portal-feature">
+          <div class="portal-feature-icon"><svg viewBox="0 0 24 24"><path d="M8 10h8M8 14h5" stroke-linecap="round"/><rect x="2" y="4" width="20" height="16" rx="3"/></svg></div>
+          <div><h4>Secure Doctor–Patient Messaging</h4><p>Send messages and questions directly to your assigned physician. Get replies without leaving home.</p></div>
+        </div>
+        <div class="portal-feature">
+          <div class="portal-feature-icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke-linecap="round"/><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3z"/></svg></div>
+          <div><h4>Digital Prescriptions</h4><p>Doctors issue e-prescriptions digitally. You can fill them at our pharmacy or at any licensed pharmacy nearby.</p></div>
+        </div>
+        <div class="portal-feature">
+          <div class="portal-feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round"/></svg></div>
+          <div><h4>Appointment Management</h4><p>Book, reschedule or cancel your appointments. See your upcoming and past visits in one place.</p></div>
+        </div>
+        <div class="portal-feature">
+          <div class="portal-feature-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke-linecap="round"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke-linecap="round"/></svg></div>
+          <div><h4>Medical Records Access</h4><p>View your lab results, diagnoses, prescription history and clinical notes securely online.</p></div>
+        </div>
+      </div>
+      <div class="portal-cta-row">
+        <a href="portal-login.html" class="btn-primary">Login to Portal</a>
+        <a href="portal-login.html#register" class="btn-outline">Register as New Patient</a>
+      </div>
+    </div>
+    <div class="portal-mockup">
+      <div class="mockup-bar">
+        <div class="mockup-dot" style="background:#ff5f57"></div>
+        <div class="mockup-dot" style="background:#febc2e"></div>
+        <div class="mockup-dot" style="background:#28c840"></div>
+      </div>
+      <div class="mock-screen">
+        <div class="mock-title">📋 Recent Prescriptions</div>
+        <div class="mock-row"><div class="mock-avatar">RX</div><div class="mock-info"><div class="mock-name">Amoxicillin 500mg</div><div class="mock-sub">Dr. Adeyemi · 3 days ago</div></div><div class="mock-badge green">Ready</div></div>
+        <div class="mock-row"><div class="mock-avatar">RX</div><div class="mock-info"><div class="mock-name">Metformin 850mg</div><div class="mock-sub">Dr. Okunade · 1 week ago</div></div><div class="mock-badge">Collected</div></div>
+      </div>
+      <div class="mock-screen">
+        <div class="mock-title">💬 Messages</div>
+        <div class="mock-row"><div class="mock-avatar">DA</div><div class="mock-info"><div class="mock-name">Dr. Adeyemi</div><div class="mock-sub">Your test results are ready for review…</div></div><div class="mock-badge blue">New</div></div>
+        <div class="mock-row"><div class="mock-avatar">PH</div><div class="mock-info"><div class="mock-name">Pharmacy</div><div class="mock-sub">Your prescription has been dispensed…</div></div><div></div></div>
+      </div>
+      <div class="mock-screen">
+        <div class="mock-title">📅 Upcoming Appointment</div>
+        <div class="mock-row"><div class="mock-avatar" style="background:var(--blue-mid);color:white;font-size:0.75rem">📅</div><div class="mock-info"><div class="mock-name">Cardiology – Check-up</div><div class="mock-sub">Monday · 9:00 AM · Dr. Okunade</div></div><div class="mock-badge green">Confirmed</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOURS & CONTACT -->
+<section id="info">
+  <p class="section-label">Find Us</p>
+  <h2 class="section-title">Hours &amp; <em>Contact</em></h2>
+  <div class="divider"></div>
+  <div class="info-grid">
+    <div class="info-card">
+      <h3><span>🕐</span> Operating Hours</h3>
+      <div class="hours-row"><span class="hours-day">Monday – Sunday</span><span class="hours-time">24 Hours <span class="open-badge">Open</span></span></div>
+      <div style="margin-top:14px; background:var(--cream); border-radius:8px; padding:14px; font-size:0.85rem; color:var(--gray); line-height:1.6;">
+        The Maria Assumpta Catholic Hospital operates <strong>24 hours a day, 7 days a week</strong>, including public holidays. Emergency and A&amp;E services are always available.
+      </div>
+    </div>
+    <div class="info-card">
+      <h3><span>📞</span> Contact Information</h3>
+      <div class="contact-item"><span class="contact-icon">📍</span><div><div class="contact-label">Address</div><div class="contact-value">Ureje, Ikere Rd. Ado-Ekiti<br>Ureje, Ado Ekiti, Ekiti State, Nigeria</div></div></div>
+      <div class="contact-item"><span class="contact-icon">📮</span><div><div class="contact-label">Postal Address</div><div class="contact-value">Box 136, Catholic Bishop Sec. Ajilosun</div></div></div>
+      <div class="contact-item"><span class="contact-icon">📱</span><div><div class="contact-label">Phone</div><div class="contact-value"><a href="tel:08106763958" style="color:var(--navy)">0810-676-3958</a><br><a href="tel:08036491356" style="color:var(--navy)">0803-649-1356</a></div></div></div>
+    </div>
+    <div class="info-card">
+      <h3><span>🗺️</span> GPS Coordinates</h3>
+      <p style="font-size:0.85rem; color:var(--gray); margin-bottom:16px;">Longitude: 5.21846 &nbsp;|&nbsp; Latitude: 7.62177</p>
+      <div style="background:#e8e4dc; border-radius:8px; height:160px; display:flex; align-items:center; justify-content:center; color:var(--gray); font-size:0.85rem;">
+        📍 Map Placeholder — Embed Google Maps here
+      </div>
+      <a href="https://maps.google.com/?q=7.62177,5.21846" target="_blank" style="display:inline-block; margin-top:14px; font-size:0.83rem; color:var(--blue-mid); font-weight:600; text-decoration:none;">Open in Google Maps →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ACCREDITATION -->
+<section id="accreditation">
+  <div class="accred-box">
+    <p class="section-label" style="text-align:center; margin-bottom:8px;">Licensing &amp; Registration</p>
+    <h3>Licensed by the Nigerian Ministry of Health</h3>
+    <p style="margin-top:12px;">The Maria Assumpta Catholic Hospital is officially registered and licensed as a Secondary Health Care Centre under the Nigerian Ministry of Health. Secondary Healthcare Centres are managed by State Governments and handle cases requiring specialist care beyond what Primary Health Care centres can provide, including general hospitals and comprehensive health centres.</p>
+    <div class="accred-tags">
+      <span class="accred-tag">Nigerian Ministry of Health</span>
+      <span class="accred-tag">Secondary Health Care Centre</span>
+      <span class="accred-tag">Ekiti State Government Oversight</span>
+      <span class="accred-tag">Catholic Healthcare Institution</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="nav-name">Maria Assumpta Catholic Hospital</span>
+      <p>A faith-based secondary health care centre serving Ado-Ekiti and the people of Ekiti State with compassionate, professional and dignified medical care.</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#services">Our Services</a></li>
+        <li><a href="#portal-info">Patient Portal</a></li>
+        <li><a href="#info">Contact &amp; Location</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Patient Portal</h4>
+      <ul>
+        <li><a href="portal-login.html">Login</a></li>
+        <li><a href="portal-login.html#register">Register</a></li>
+        <li><a href="portal-dashboard.html">My Dashboard</a></li>
+        <li><a href="portal-dashboard.html#prescriptions">Prescriptions</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Maria Assumpta Catholic Hospital, Ado-Ekiti. All rights reserved.</span>
+    <span>Ureje, Ikere Rd. Ado-Ekiti, Ekiti State, Nigeria</span>
+  </div>
+</footer>
+
+<script>
+  function showTab(name, btn) {
+    ['medical','surgical','clinical','support'].forEach(t => {
+      document.getElementById('tab-'+t).style.display = 'none';
+    });
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-'+name).style.display = 'grid';
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
